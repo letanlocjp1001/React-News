@@ -15,7 +15,7 @@ const reducer = (state, action) => {
         ...state,
         isLoading: false,
         hits: action.payload.hits,
-        nbPage: action.payload.nbPages,
+        nbPages: action.payload.nbPages,
       }
     case REMOVE_STORY:
       return {
@@ -24,6 +24,27 @@ const reducer = (state, action) => {
           // console.log(story.objectID)
           return story.objectID !== action.payload
         }),
+      }
+    case HANDLE_SEARCH:
+      return {
+        ...state,
+        query: action.payload,
+        page: 0,
+      }
+    case HANDLE_PAGE:
+      if (action.payload === 'inc') {
+        let nextPage = state.page + 1
+        if (nextPage > state.nbPages - 1) {
+          nextPage = 0
+        }
+        return { ...state, page: nextPage }
+      }
+      if (action.payload === 'dec') {
+        let prevPage = state.page - 1
+        if (prevPage < 0) {
+          prevPage = 0
+        }
+        return { ...state, page: prevPage }
       }
     default:
       throw new Error(`no mathching "${action.type}" action type`)
